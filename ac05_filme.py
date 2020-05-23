@@ -128,8 +128,9 @@ class Banco:
         lista de objetos Filme do ano correspondente,
         ordenado pelo ID de forma crescente
         '''
-        lista = session.query(Filme).order_by(Filme.id).get(ano)
-        return lista
+        lista = session.query(Filme).order_by(Filme.id)
+        if lista is not None:
+            return lista
 
     def buscar_por_genero(self, genero: str):
         '''
@@ -138,8 +139,14 @@ class Banco:
         ordenados pelo nome de forma crescente
         '''
         self.genero=genero
-        lista = session.query(Filme).get(genero).order_by(Filme.nome)
-        return lista
+        lista = session.query(Filme).all()
+        #.order_by(Filme.nome)
+        if lista is not None:
+            lista2=[]
+            for i in lista:
+                if self.genero==Filme.genero:
+                    lista2.append(i)
+            return lista2
 
     def buscar_melhores_do_ano(self, ano: int):
         '''
@@ -152,6 +159,7 @@ class Banco:
         '''
         self.ano=ano
         lista = session.query(Filme).filter(Filme.avaliacao>=8.5 ).order_by(desc(Filme.avaliacao)).get(ano)
-        return lista
+        if lista is not None:
+            return lista
 
 
