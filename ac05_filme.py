@@ -16,7 +16,7 @@ connection = engine.connect()
 Base = declarative_base(engine)
 session = Session()
 
-
+#Gledson pra mim o mapeamento ta ok!
 class Filme(Base):
     __tablename__ = 'FILME'
     id = Column('ID', Integer, primary_key=True, autoincrement=True)
@@ -29,7 +29,7 @@ class Filme(Base):
     genero = Column('GENERO', String(255))
     
   
-
+    #pra mim ta ok
     # Construtor
     def __init__(self, nome, diretor, ano, duracao, votos, avaliacao, genero):
         self.nome = nome
@@ -73,9 +73,11 @@ class Banco:
         Recebe uma lista de objetos Filme e armazena esse
         objeto no banco de dados
         '''
-        
-        lista = session.query(Filme).all()
-        return lista
+        for i in filmes:
+            session.add(i)
+            session.commit()
+        #entendo que query é = select então para armazenar creio que é o add commit--lista = session.query(Filme).all()
+        #return lista
 
         
     def alterar_avaliacao(self, filme: Filme, avaliacao: float):
@@ -83,8 +85,11 @@ class Banco:
         Recebe um objeto filme e altera sua avaliação de
         acordo com o valor do parametro avaliacao
         '''
-        lista = session.query(Filme).get(1)
-        lista.avaliacao = 7
+        lista = session.query(Filme).get(filme) #aqui esta fazendo select no id 1, será que é isso? 
+        #se ele já me passa o filme no parametro será que precisa dizer o id?
+        self.avaliacao=avaliacao
+        #lista.avaliacao = 7 #aqui voce está setando o valor 7.
+        lista.avaliacao= avaliacao # não seria setar na avaliacao o valor do parametro avaliacao recebido no metodo alterar_avaliacao?
         session.commit()
 
     def excluir(self, id: int):
@@ -92,7 +97,10 @@ class Banco:
         Recebe o id do filme e exclui o filme correspondente
         do banco de dados
         '''
-        pass
+        lista = session.query(Filme).get(id)
+        if lista is not None:
+            session.delete(lista)
+            session.commit()
 
     def buscar_todos(self):
         '''
@@ -109,8 +117,10 @@ class Banco:
         Realiza busca no banco de dados e retorna um
         objeto Filme de acordo com id
         '''
-        lista = session.query(Filme).get(2)
-        return lista
+        self.id=id
+        lista = session.query(Filme).get(id)
+        if lista is not None:
+            return lista
 
     def buscar_por_ano(self, ano: int):
         '''
@@ -118,10 +128,8 @@ class Banco:
         lista de objetos Filme do ano correspondente,
         ordenado pelo ID de forma crescente
         '''
-        lista = session.query(Filme).order_by(Filme.ano).all()
+        lista = session.query(Filme).order_by(Filme.id).get(ano)
         return lista
-
-        
 
     def buscar_por_genero(self, genero: str):
         '''
@@ -129,7 +137,8 @@ class Banco:
         lista de objetos Filme do genero correspondente,
         ordenados pelo nome de forma crescente
         '''
-        lista = session.query(Filme).order_by(Filme.genero).all()
+        self.genero=genero
+        lista = session.query(Filme).get(genero).order_by(Filme.nome)
         return lista
 
     def buscar_melhores_do_ano(self, ano: int):
@@ -141,5 +150,8 @@ class Banco:
         DICA - utilize a função:
             .order_by(desc(Filme.avaliacao))
         '''
-        lista = session.query(Filme).order_by(desc(Filme.avaliacao)).all()
+        self.ano=ano
+        lista = session.query(Filme).filter(Filme.avaliacao>=8.5 ).order_by(desc(Filme.avaliacao)).get(ano)
         return lista
+
+
