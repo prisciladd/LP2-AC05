@@ -39,12 +39,13 @@ print('Quantidade de Filmes cadastrados:', len(lista))      # 10 (este é o valo
 print('Nome do primeiro filme:', lista[0].nome)             # Avengers: Endgame (valor na primeira execução)
 print('Nome do último filme:', lista[-1].nome)              # Thick as Thieves (valor na primeira execução)
 
+'''
 # Busca todos os filmes do gênero Crime, ordenados pelo nome
 lista = banco.buscar_por_genero('Crime')
 print('-'*60)
 for f in lista:
     print(f.id, f.nome, f.diretor, f.ano, f.duracao, f.votos, f.avaliacao, f.genero)
-'''
+
 # Busca todos os filmes de 2019, ordenados pelo id
 lista = banco.buscar_por_ano(2019)
 print('-'*60)
@@ -63,7 +64,7 @@ filme = banco.buscar_por_id(7)
 # altera a avalação do filme de id 7 para 8.7
 if filme is not None:
     banco.alterar_avaliacao(filme, 8.7)
-
+'''
 # Exclui o filme de id 6
 banco.excluir(6)
 
@@ -72,4 +73,3 @@ lista = banco.buscar_todos()
 print('-'*60)
 for f in lista:         # exibe lista de todos os filmes cadastrados no banco
     print(f.id, f.nome, f.diretor, f.ano, f.duracao, f.votos, f.avaliacao, f.genero)
-'''
